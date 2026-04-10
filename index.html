@@ -3,181 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>個人報告作品集 - 輪播版</title>
+    <title>我的專業報告作品集</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f4f7f6;
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --text: #333;
+            --bg: #f8f9fa;
         }
 
-        body { font-family: "Microsoft JhengHei", sans-serif; margin: 0; background-color: var(--bg-color); }
+        body { font-family: "Microsoft JhengHei", sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
         /* 導覽列 */
         header {
-            background-color: var(--primary-color);
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
             padding: 0 10%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 70px;
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        nav ul { display: flex; list-style: none; }
-        .dropdown { position: relative; margin-left: 20px; }
-        .dropdown a { color: white; text-decoration: none; font-weight: bold; }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            top: 30px;
-            border-radius: 4px;
+        .nav { display: flex; list-style: none; }
+        .dropdown { position: relative; margin-left: 20px; cursor: pointer; padding: 10px; }
+        .dropdown-content { 
+            display: none; position: absolute; background: white; 
+            min-width: 150px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            border-radius: 8px; top: 45px;
         }
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown-content a { color: #333; padding: 10px; display: block; font-size: 14px; }
+        .dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s; }
+        .dropdown-content a { color: var(--text); padding: 12px; display: block; text-decoration: none; border-bottom: 1px solid #eee; }
 
-        /* 輪播圖容器設定 */
-        .carousel-section {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+        /* 輪播圖區塊 */
+        .hero-section { padding: 40px 0; background: #fff; }
+        .swiper { width: 85%; height: 450px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .swiper-slide { display: flex; align-items: center; justify-content: center; background: #34495e; color: white; font-size: 24px; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
 
-        .swiper {
-            width: 100%;
-            height: 400px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+        /* 內容區塊 */
+        .container { max-width: 1100px; margin: 80px auto; padding: 0 20px; }
+        .section-title { text-align: center; margin-bottom: 50px; font-size: 2rem; }
 
-        .swiper-slide {
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-        }
-
-        .swiper-slide img {
-            width: 100%;
-            height: 70%;
-            object-fit: cover; /* 圖片會填滿區塊 */
-        }
-
-        .slide-info {
-            padding: 15px;
-            text-align: center;
-        }
-
-        /* 報告列表 */
-        .container { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
         .report-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
         }
+
+        /* 卡片設計與動畫基礎 */
         .card {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border-bottom: 4px solid var(--accent);
         }
+        .card:hover { transform: translateY(-10px); }
         .btn {
             display: inline-block;
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 25px;
             text-decoration: none;
-            border-radius: 5px;
-            margin-top: 10px;
+            border-radius: 50px;
+            margin-top: 15px;
+            transition: 0.3s;
         }
+        .btn:hover { background: #2980b9; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">我的專案展示</div>
-    <nav>
-        <ul>
-            <li class="dropdown">
-                <a href="#">分類選單 ▾</a>
-                <div class="dropdown-content">
-                    <a href="#reports">所有報告</a>
-                    <a href="#">關於我</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
+    <div class="logo" style="font-size: 1.5rem; font-weight: bold;">PORTFOLIO</div>
+    <div class="nav">
+        <div class="dropdown">報告分類 ▾
+            <div class="dropdown-content">
+                <a href="#academic">學術研究</a>
+                <a href="#projects">專案實作</a>
+            </div>
+        </div>
+    </div>
 </header>
 
-<div class="carousel-section">
-    <h2 style="text-align: center;">精選報告預覽</h2>
+<section class="hero-section">
     <div class="swiper">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="https://via.placeholder.com/800x400?text=Report+1+Cover" alt="報告1">
-                <div class="slide-info">
-                    <strong>2024 市場趨勢分析</strong> - 點擊下方卡片查看全文
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <img src="https://via.placeholder.com/800x400?text=Report+2+Cover" alt="報告2">
-                <div class="slide-info">
-                    <strong>永續發展研究報告</strong> - 關鍵數據圖表預覽
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <img src="https://via.placeholder.com/800x400?text=Report+3+Cover" alt="報告3">
-                <div class="slide-info">
-                    <strong>UI/UX 使用者調查</strong> - 訪談結果摘要
-                </div>
-            </div>
+            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200" alt="Slide 1"></div>
+            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200" alt="Slide 2"></div>
         </div>
         <div class="swiper-pagination"></div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
     </div>
-</div>
+</section>
 
-<div class="container" id="reports">
-    <h3>全部報告列表</h3>
+<div class="container">
+    <h2 class="section-title" data-aos="fade-up">我的研究成果</h2>
+
     <div class="report-grid">
-        <div class="card">
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
             <h3>2024 市場趨勢分析</h3>
-            <p>這份報告探討了 AI 在電商領域的應用...</p>
-            <a href="#" class="btn">下載 PDF</a>
+            <p>深入探討數位轉型對傳統產業的衝擊與機會...</p>
+            <a href="#" class="btn">閱讀更多</a>
         </div>
-        <div class="card">
-            <h3>永續發展研究</h3>
-            <p>針對城市綠化與碳中和政策的分析...</p>
-            <a href="#" class="btn">線上閱讀</a>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h3>UX 使用者體驗優化</h3>
+            <p>針對電商流程進行優化測試，提升結帳率 15%。</p>
+            <a href="#" class="btn">閱讀更多</a>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="300">
+            <h3>數據科學專案</h3>
+            <p>利用 Python 進行大數據抓取與清洗，預測房價走勢。</p>
+            <a href="#" class="btn">閱讀更多</a>
+        </div>
+
+        <div class="card" data-aos="fade-right" data-aos-delay="400">
+            <h3>品牌行銷策略</h3>
+            <p>為社群媒體內容制定的一系列視覺與文案計畫。</p>
+            <a href="#" class="btn">閱讀更多</a>
         </div>
     </div>
 </div>
 
+<footer style="text-align: center; padding: 50px; color: #999;">
+    &copy; 2026 個人報告展示網站
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
+    // 1. 初始化滾動動畫 (AOS)
+    AOS.init({
+        duration: 1000, // 動畫持續 1 秒
+        once: false,    // 是否只執行一次（false 代表往回捲動會再次觸發）
+        offset: 120     // 距離視窗底部多少像素時觸發
+    });
+
+    // 2. 初始化輪播圖 (Swiper)
     const swiper = new Swiper('.swiper', {
-        loop: true, // 循環播放
-        autoplay: {
-            delay: 3000, // 3秒切換一次
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
+        loop: true,
+        autoplay: { delay: 4000 },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
     });
 </script>
 
